@@ -1,0 +1,97 @@
+-- Cash Counter Test --
+
+-- Gui to Lua
+-- Version: 3.2
+
+-- Instances:
+
+local DHCS_Cash_Counter = Instance.new("ScreenGui")
+local Cash_Counter_Frame = Instance.new("Frame")
+local Made_By_DHCS_Label = Instance.new("TextLabel")
+local Total_Cash_Label = Instance.new("TextLabel")
+
+--Properties:
+
+DHCS_Cash_Counter.Name = "DHCS_Cash_Counter"
+DHCS_Cash_Counter.Parent = game.CoreGui
+DHCS_Cash_Counter.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+Cash_Counter_Frame.Name = "Cash_Counter_Frame"
+Cash_Counter_Frame.Parent = DHCS_Cash_Counter
+Cash_Counter_Frame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+Cash_Counter_Frame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Cash_Counter_Frame.Position = UDim2.new(0.314375997, 0, 0.371720105, 0)
+Cash_Counter_Frame.Size = UDim2.new(0, 142, 0, 63)
+Cash_Counter_Frame.Active = true
+Cash_Counter_Frame.Draggable = true
+
+Made_By_DHCS_Label.Name = "Made_By_DHCS_Label"
+Made_By_DHCS_Label.Parent = Cash_Counter_Frame
+Made_By_DHCS_Label.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+Made_By_DHCS_Label.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Made_By_DHCS_Label.Size = UDim2.new(0, 142, 0, 21)
+Made_By_DHCS_Label.Font = Enum.Font.GothamBlack
+Made_By_DHCS_Label.Text = "Made By DHCS#4799"
+Made_By_DHCS_Label.TextColor3 = Color3.fromRGB(255, 255, 255)
+Made_By_DHCS_Label.TextScaled = true
+Made_By_DHCS_Label.TextSize = 14.000
+Made_By_DHCS_Label.TextWrapped = true
+
+Total_Cash_Label.Name = "Total_Cash_Label"
+Total_Cash_Label.Parent = Cash_Counter_Frame
+Total_Cash_Label.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+Total_Cash_Label.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Total_Cash_Label.Position = UDim2.new(0.169014081, 0, 0.460317433, 0)
+Total_Cash_Label.Size = UDim2.new(0, 94, 0, 21)
+Total_Cash_Label.Font = Enum.Font.GothamBlack
+Total_Cash_Label.Text = "£0"
+Total_Cash_Label.TextColor3 = Color3.fromRGB(0, 255, 0)
+Total_Cash_Label.TextScaled = true
+Total_Cash_Label.TextSize = 14.000
+Total_Cash_Label.TextWrapped = true
+
+-- Get Hundreds, Tens and Ones --
+
+-- NonComma and Comma In One --
+
+local States = {}
+
+States.Drop = game:GetService("Workspace").Ignored.Drop
+States.NonComma = 0
+States.Comma = 0
+States.TotalAmount = 0
+States.Amount = 0
+States.Money = "Text"
+States.MoneyString = "Text2"
+States.HunTenOne = 0
+States.ThousandsPlace = 0
+
+
+
+spawn(function ()
+    while wait() do
+    States.TotalAmount = 0
+
+        for i,v in pairs(States.Drop:GetChildren()) do
+            if v.Name == "MoneyDrop" then
+                if not string.find(v.BillboardGui.TextLabel.Text, ",") then
+                    States.Money = v.BillboardGui.TextLabel.Text
+                    States.MoneyString = string.sub(States.Money, 2)
+                    States.NonComma = States.MoneyString
+                    States.TotalAmount = States.TotalAmount + States.NonComma
+                    Total_Cash_Label.Text = "£"..States.TotalAmount
+                elseif string.find(v.BillboardGui.TextLabel.Text, ",") then
+                    States.Money = v.BillboardGui.TextLabel.Text
+                    States.MoneyString = string.sub(States.Money, 2)
+                    States.ThousandsPlace = string.sub(States.MoneyString, 1, 1)
+                    States.HunTenOne = string.sub(States.MoneyString, 3)
+                    States.Comma = States.ThousandsPlace..States.HunTenOne
+                    States.TotalAmount = States.TotalAmount + States.Comma
+                    Total_Cash_Label.Text = "£"..States.TotalAmount
+                end
+            end
+        end
+    end
+end)
+
+game.StarterGui:SetCore("SendNotification", {Title = "TOTAL AMOUNT", Text = "Is "..States.TotalAmount})
