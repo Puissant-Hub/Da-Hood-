@@ -12,7 +12,6 @@ pcall(function()
         Text = 'the crash will still work but our group link was copied to your clipboard thx';
         Duration = 20;
        })
-       setclipboard('https://www.roblox.com/groups/12052955/Swag-mod#!/about')
     end))
   end
 end)
